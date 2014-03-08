@@ -12,7 +12,10 @@ includes the SHA-1 and SHA-256 cores.
 ***(2014-03-07)***
 Initial version. Build using Altera Quarus 13.1.
 
-In Cyclone5 the design occupys 2847 ALMs and 3665 registers. The design
-can achieve at least 86 MHz.
+- Cyclone 5 GX device
+- 2847 ALMs and
+- 3665 registers
+- 86 MHz
+
 
 
