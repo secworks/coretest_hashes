@@ -170,12 +170,12 @@ module coretest_hashes(
             
             // Control.
             .cs(sha1_cs),
-            .write_read(sha1_we),
+            .we(sha1_we),
               
             // Data ports.
             .address(sha1_address),
-            .data_in(sha1_write_data),
-            .data_out(sha1_read_data),
+            .write_data(sha1_write_data),
+            .read_data(sha1_read_data),
             .error(sha1_error)
            );
 
@@ -187,12 +187,12 @@ module coretest_hashes(
                 
                 // Control.
                 .cs(sha256_cs),
-                .write_read(sha256_we),
+                .we(sha256_we),
               
                 // Data ports.
                 .address(sha256_address),
-                .data_in(sha256_write_data),
-                .data_out(sha256_read_data),
+                .write_data(sha256_write_data),
+                .read_data(sha256_read_data),
                 .error(sha256_error)
                );
 
