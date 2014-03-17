@@ -59,20 +59,50 @@ import threading
 VERBOSE = False
 
 # Memory map.
-SOC                 = '\x55'
-EOC                 = '\xaa'
-READ_CMD            = '\x10'
-WRITE_CMD           = '\x11'
+SOC                   = '\x55'
+EOC                   = '\xaa'
+READ_CMD              = '\x10'
+WRITE_CMD             = '\x11'
 
-UART_ADDR_PREFIX    = '\x00'
-SHA1_ADDR_PREFIX    = '\x10'
-SHA256_ADDR_PREFIX  = '\x20'
+UART_ADDR_PREFIX      = '\x00'
 
-NAME0_ADDR          = '\x00'
-NAME1_ADDR          = '\x01'
-VERSION_ADDR        = '\x02'
-TEST_CORE_RW_REG    = '\x10'
-TEST_CORE_DEBUG_REG = '\x20'
+SHA1_ADDR_PREFIX      = '\x10'
+SHA1_ADDR_NAME0       = '\x00'
+SHA1_ADDR_NAME1       = '\x01'
+SHA1_ADDR_VERSION     = '\x02'
+SHA1_ADDR_CTRL        = '\x08'
+SHA1_CTRL_INIT_BIT    = 0
+SHA1_CTRL_NEXT_BIT    = 1
+SHA1_ADDR_STATUS      = '\x09'
+SHA1_STATUS_READY_BIT = 0
+SHA1_STATUS_VALID_BIT = 1
+SHA1_ADDR_BLOCK0      = '\x10'
+SHA1_ADDR_BLOCK1      = '\x11'
+SHA1_ADDR_BLOCK2      = '\x12'
+SHA1_ADDR_BLOCK3      = '\x13'
+SHA1_ADDR_BLOCK4      = '\x14'
+SHA1_ADDR_BLOCK5      = '\x15'
+SHA1_ADDR_BLOCK6      = '\x16'
+SHA1_ADDR_BLOCK7      = '\x17'
+SHA1_ADDR_BLOCK8      = '\x18'
+SHA1_ADDR_BLOCK9      = '\x19'
+SHA1_ADDR_BLOCK10     = '\x1a'
+SHA1_ADDR_BLOCK11     = '\x1b'
+SHA1_ADDR_BLOCK12     = '\x1c'
+SHA1_ADDR_BLOCK13     = '\x1d'
+SHA1_ADDR_BLOCK14     = '\x1e'
+SHA1_ADDR_BLOCK15     = '\x1f'
+SHA1_ADDR_DIGEST0     = '\x20'
+SHA1_ADDR_DIGEST1     = '\x21'
+SHA1_ADDR_DIGEST2     = '\x22'
+SHA1_ADDR_DIGEST3     = '\x23'
+SHA1_ADDR_DIGEST4     = '\x24'
+
+SHA256_ADDR_PREFIX    = '\x20'
+
+NAME0_ADDR            = '\x00'
+NAME1_ADDR            = '\x01'
+VERSION_ADDR          = '\x02'
 
 
 #-------------------------------------------------------------------
@@ -185,11 +215,11 @@ def main():
 
     # TC1: Read name and version from SHA-1 core.
     print "TC1: Reading name, type and version words from SHA-1 core."
-    my_cmd = [SOC, READ_CMD, SHA1_ADDR_PREFIX, NAME0_ADDR, EOC]
+    my_cmd = [SOC, READ_CMD, SHA1_ADDR_PREFIX, SHA1_ADDR_NAME0, EOC]
     write_serial_bytes(my_cmd, ser)
-    my_cmd = [SOC, READ_CMD, SHA1_ADDR_PREFIX, NAME1_ADDR, EOC]
+    my_cmd = [SOC, READ_CMD, SHA1_ADDR_PREFIX, SHA1_ADDR_NAME1, EOC]
     write_serial_bytes(my_cmd, ser)
-    my_cmd = [SOC, READ_CMD, SHA1_ADDR_PREFIX, VERSION_ADDR, EOC]
+    my_cmd = [SOC, READ_CMD, SHA1_ADDR_PREFIX, SHA1_ADDR_VERSION, EOC]
     write_serial_bytes(my_cmd, ser)
     print""
     
