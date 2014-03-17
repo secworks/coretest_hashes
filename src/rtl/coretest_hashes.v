@@ -80,7 +80,7 @@ module coretest_hashes(
   wire          uart_txd_ack;
   reg           uart_cs;
   reg           uart_we;
-  reg [3 : 0]   uart_address;
+  reg [7 : 0]   uart_address;
   reg [31 : 0]  uart_write_data;
   wire [31 : 0] uart_read_data;
   wire          uart_error;
@@ -211,7 +211,7 @@ module coretest_hashes(
 
       uart_cs            = 0;
       uart_we            = 0;
-      uart_address       = 4'h0;
+      uart_address       = 8'h00;
       uart_write_data    = 32'h00000000;
 
       sha1_cs            = 0;
@@ -230,7 +230,7 @@ module coretest_hashes(
           begin
             uart_cs            = coretest_cs;
             uart_we            = coretest_we;
-            uart_address       = coretest_address[3 : 0];
+            uart_address       = coretest_address[7 : 0];
             uart_write_data    = coretest_write_data;
             coretest_read_data = uart_read_data;
             coretest_error     = uart_error;
