@@ -9,6 +9,12 @@ uart for external access and to hash function cores. The first version
 includes the SHA-1 and SHA-256 cores.
 
 ## Status ##
+***(2014-03-17***
+Coretest_hashes has been successfully tested in real hardware. The
+supplied program in src/sw can talk to coretest and initiate block
+processing in both SHA-1 and SHA-256.
+
+
 ***(2014-03-07)***
 Initial version. Build using Altera Quarus 13.1.
 
@@ -16,6 +22,8 @@ Initial version. Build using Altera Quarus 13.1.
 - 2847 ALMs and
 - 3665 registers
 - 86 MHz
+
+
 
 
 
