@@ -59,6 +59,12 @@ import hashlib
 #-------------------------------------------------------------------
 VERBOSE = False
 
+# Serial port defines
+SERIAL_DEVICE = '/dev/cu.usbserial-A801SA6T'
+BAUD_RATE = 9600
+DATA_BITS = 8
+STOP_BITS = 1
+
 # Memory map.
 SOC                   = '\x55'
 EOC                   = '\xaa'
@@ -138,6 +144,11 @@ NAME0_ADDR            = '\x00'
 NAME1_ADDR            = '\x01'
 VERSION_ADDR          = '\x02'
 
+#-------------------------------------------------------------------
+# Globals
+#-------------------------------------------------------------------
+interface_open = False
+
 
 #-------------------------------------------------------------------
 # print_response()
@@ -190,11 +201,12 @@ def read_serial_thread(serialport):
         
     buffer = []
     while True:
-        response = serialport.read()
-        buffer.append(response)
-        if response == '\x55':
-            print_response(buffer)
-            buffer = []
+        if interface_open:
+            response = serialport.read()
+            buffer.append(response)
+            if response == '\x55':
+                print_response(buffer)
+                buffer = []
 
 
 #-------------------------------------------------------------------
@@ -221,11 +233,11 @@ def write_serial_bytes(tx_cmd, serialport):
 def main():
     # Open device
     ser = serial.Serial()
-    ser.port='/dev/cu.usbserial-A801SA6T'
-    ser.baudrate=9600
-    ser.bytesize=8
+    ser.port=SERIAL_DEVICE
+    ser.baudrate=BAUD_RATE
+    ser.bytesize=DATA_BITS
     ser.parity='N'
-    ser.stopbits=1
+    ser.stopbits=STOP_BITS
     ser.timeout=1
     ser.writeTimeout=0
 
@@ -237,6 +249,8 @@ def main():
     except:
         print "Error: Can't open serial device."
         sys.exit(1)
+
+    interface_open = True
 
     try:
         my_thread = threading.Thread(target=read_serial_thread, args=(ser,))
@@ -376,6 +390,8 @@ def main():
     # Exit nicely.
     if VERBOSE:
         print "Done. Closing device."
+
+    interface_open = False
     ser.close()
 
 
