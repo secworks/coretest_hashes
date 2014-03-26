@@ -57,13 +57,17 @@ import hashlib
 #-------------------------------------------------------------------
 # Defines.
 #-------------------------------------------------------------------
-VERBOSE = False
-
-# Serial port defines
+# Serial port defines.
+# CONFIGURE YOUR DEVICE HERE!
 SERIAL_DEVICE = '/dev/cu.usbserial-A801SA6T'
 BAUD_RATE = 9600
 DATA_BITS = 8
 STOP_BITS = 1
+
+
+# Verbose operation on/off
+VERBOSE = False
+
 
 # Memory map.
 SOC                   = '\x55'
