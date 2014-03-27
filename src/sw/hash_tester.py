@@ -148,11 +148,6 @@ NAME0_ADDR            = '\x00'
 NAME1_ADDR            = '\x01'
 VERSION_ADDR          = '\x02'
 
-#-------------------------------------------------------------------
-# Globals
-#-------------------------------------------------------------------
-interface_open = False
-
 
 #-------------------------------------------------------------------
 # print_response()
@@ -205,13 +200,16 @@ def read_serial_thread(serialport):
         
     buffer = []
     while True:
-        if interface_open:
+        if serialport.isOpen():
             response = serialport.read()
             buffer.append(response)
             if response == '\x55':
                 print_response(buffer)
                 buffer = []
-
+        else:
+            print "No open device yet."
+            time.sleep(0.1)
+            
 
 #-------------------------------------------------------------------
 # write_serial_bytes()
@@ -253,8 +251,6 @@ def main():
     except:
         print "Error: Can't open serial device."
         sys.exit(1)
-
-    interface_open = True
 
     try:
         my_thread = threading.Thread(target=read_serial_thread, args=(ser,))
@@ -394,8 +390,6 @@ def main():
     # Exit nicely.
     if VERBOSE:
         print "Done. Closing device."
-
-    interface_open = False
     ser.close()
 
 
