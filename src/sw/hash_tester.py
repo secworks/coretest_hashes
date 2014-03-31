@@ -267,6 +267,12 @@ def single_block_test_sha256(block, ser):
 
 
 #-------------------------------------------------------------------
+#-------------------------------------------------------------------
+def double_block_test_sha256(block1, block2, ser):
+    pass
+
+
+#-------------------------------------------------------------------
 # single_block_test_sha1()
 #
 # Write a given block to SHA-1 and perform single block
@@ -298,6 +304,12 @@ def single_block_test_sha1(block, ser):
         write_serial_bytes(message, ser)
     print""
     
+
+#-------------------------------------------------------------------
+#-------------------------------------------------------------------
+def double_block_test_sha256(block1, block2, ser):
+    pass
+
 
 #-------------------------------------------------------------------
 # main()
@@ -333,16 +345,18 @@ def main():
     my_thread.daemon = True
     my_thread.start()
 
-    # TC1-1: Read name and version from SHA-1 core.
-    print "TC1-1: Reading name, type and version words from SHA-1 core."
+
+    # TC1: Read name and version from SHA-1 core.
+    print "TC1: Reading name, type and version words from SHA-1 core."
     write_serial_bytes([SOC, READ_CMD, SHA1_ADDR_PREFIX, SHA1_ADDR_NAME0, EOC], ser)
     write_serial_bytes([SOC, READ_CMD, SHA1_ADDR_PREFIX, SHA1_ADDR_NAME1, EOC], ser)
     write_serial_bytes([SOC, READ_CMD, SHA1_ADDR_PREFIX, SHA1_ADDR_VERSION, EOC], ser)
     print""
 
-    # TC1-2: Writing and reading a block into the SHA-1 core.
-    print "TC1-2: Writing and reading a block into the SHA-1 core."
-    tc1_block = ['\x61', '\x62', '\x63', '\x80', '\x00', '\x00', '\x00', '\x00',
+
+    # TC2: Single block message test as specified by NIST.
+    print "TC2: Single block message test for SHA-1."
+    tc2_block = ['\x61', '\x62', '\x63', '\x80', '\x00', '\x00', '\x00', '\x00',
                  '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00',
                  '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00',
                  '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00',
@@ -351,10 +365,56 @@ def main():
                  '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00',
                  '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x18']
 
-    single_block_test_sha1(tc1_block, ser)
+    tc1_sha1_expected = [0xa9993e36, 0x4706816a, 0xba3e2571,
+                         0x7850c26c, 0x9cd0d89d]
 
-    # TC2-1: Read name and version from SHA-256 core.
-    print "TC2-1: Reading name, type and version words from SHA-256 core."
+    print "TC2: Expected digest values as specified by NIST:"
+    for i in tc2_sha1_expected:
+        print("0x%08x " % i)
+    print("")
+    single_block_test_sha1(tc2_block, ser)
+
+
+    # TC3: Double block message test as specified by NIST.
+    print "TC3: Double block message test for SHA-1."
+    tc3_1_block = ['\x61', '\x62', '\x63', '\x64', '\x62', '\x63', '\x64', '\x65',
+                   '\x63', '\x64', '\x65', '\x66', '\x64', '\x65', '\x66', '\x67',
+                   '\x65', '\x66', '\x67', '\x68', '\x66', '\x67', '\x68', '\x69',
+                   '\x67', '\x68', '\x69', '\x6A', '\x68', '\x69', '\x6A', '\x6B',
+                   '\x69', '\x6A', '\x6B', '\x6C', '\x6A', '\x6B', '\x6C', '\x6D',
+                   '\x6B', '\x6C', '\x6D', '\x6E', '\x6C', '\x6D', '\x6E', '\x6F',
+                   '\x6D', '\x6E', '\x6F', '\x70', '\x6E', '\x6F', '\x70', '\x71',
+                   '\x80', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00']
+
+    tc3_1_block = ['\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00',
+                   '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00',
+                   '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00',
+                   '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00',
+                   '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00',
+                   '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00',
+                   '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00',
+                   '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x01', '\xC0'
+
+    tc3_1_sha1_expected = [0xF4286818, 0xC37B27AE, 0x0408F581,
+                           0x84677148, 0x4A566572]
+
+    tc3_2_sha1_expected = [0x84983E44, 0x1C3BD26E, 0xBAAE4AA1,
+                           0xF95129E5, 0xE54670F1]
+
+    print "TC3: Expected digest values for first block as specified by NIST:"
+    for i in tc3_1_sha1_expected:
+        print("0x%08x " % i)
+    print("")
+    print "TC3: Expected digest values for second block as specified by NIST:"
+    for i in tc3_2_sha1_expected:
+        print("0x%08x " % i)
+    print("")
+    double_block_test_sha1(tc3_1_block, tc3_2_block, ser)
+
+
+
+    # TC4: Read name and version from SHA-256 core.
+    print "TC4: Reading name, type and version words from SHA-256 core."
     my_cmd = [SOC, READ_CMD, SHA256_ADDR_PREFIX, NAME0_ADDR, EOC]
     write_serial_bytes(my_cmd, ser)
     my_cmd = [SOC, READ_CMD, SHA256_ADDR_PREFIX, NAME1_ADDR, EOC]
@@ -363,7 +423,28 @@ def main():
     write_serial_bytes(my_cmd, ser)
     print""
 
-    single_block_test_sha256(tc1_block, ser)
+
+    # TC5: Single block message test as specified by NIST.
+    print "TC5: Single block message test for SHA-256."
+    print "TC5: Expected digest values as specified by NIST:"
+    for i in tc5_sha256_expected:
+        print("0x%08x " % i)
+    print("")
+    single_block_test_sha256(tc2_block, ser)
+
+
+    # TC6: Double block message test as specified by NIST.
+    print "TC6: Double block message test for SHA-256."
+    print "TC6: Expected digest values for first block as specified by NIST:"
+    for i in tc6_1_sha256_expected:
+        print("0x%08x " % i)
+    print("")
+    print "TC6: Expected digest values for second block as specified by NIST:"
+    for i in tc6_2_sha256_expected:
+        print("0x%08x " % i)
+    print("")
+    double_block_test_sha256(tc3_1_block, tc3_2_block, ser)
+
     
     # Exit nicely.
     if VERBOSE:
