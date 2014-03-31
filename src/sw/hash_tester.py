@@ -365,7 +365,7 @@ def main():
                  '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00',
                  '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x18']
 
-    tc1_sha1_expected = [0xa9993e36, 0x4706816a, 0xba3e2571,
+    tc2_sha1_expected = [0xa9993e36, 0x4706816a, 0xba3e2571,
                          0x7850c26c, 0x9cd0d89d]
 
     print "TC2: Expected digest values as specified by NIST:"
@@ -412,7 +412,6 @@ def main():
     double_block_test_sha1(tc3_1_block, tc3_2_block, ser)
 
 
-
     # TC4: Read name and version from SHA-256 core.
     print "TC4: Reading name, type and version words from SHA-256 core."
     my_cmd = [SOC, READ_CMD, SHA256_ADDR_PREFIX, NAME0_ADDR, EOC]
@@ -426,6 +425,10 @@ def main():
 
     # TC5: Single block message test as specified by NIST.
     print "TC5: Single block message test for SHA-256."
+
+    tc5_sha256_expected = [0xBA7816BF, 0x8F01CFEA, 0x414140DE, 0x5DAE2223,
+                           0xB00361A3, 0x96177A9C, 0xB410FF61, 0xF20015AD]
+
     print "TC5: Expected digest values as specified by NIST:"
     for i in tc5_sha256_expected:
         print("0x%08x " % i)
@@ -435,6 +438,14 @@ def main():
 
     # TC6: Double block message test as specified by NIST.
     print "TC6: Double block message test for SHA-256."
+
+
+    tc6_1_sha256_expected = [0x85E655D6, 0x417A1795, 0x3363376A, 0x624CDE5C,
+                             0x76E09589, 0xCAC5F811, 0xCC4B32C1, 0xF20E533A]
+
+    tc6_2_sha256_expected = [0x248D6A61, 0xD20638B8, 0xE5C02693, 0x0C3E6039,
+                             0xA33CE459, 0x64FF2167, 0xF6ECEDD4, 0x19DB06C1]
+
     print "TC6: Expected digest values for first block as specified by NIST:"
     for i in tc6_1_sha256_expected:
         print("0x%08x " % i)
