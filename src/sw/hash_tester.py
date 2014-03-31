@@ -230,7 +230,7 @@ def read_serial_thread(serialport):
         if serialport.isOpen():
             response = serialport.read()
             buffer.append(response)
-            if response == '\x55':
+            if ((response == '\x55') and len(buffer) > 7):
                 print_response(buffer)
                 buffer = []
         else:
@@ -263,12 +263,12 @@ def write_serial_bytes(tx_cmd, serialport):
 def single_block_test_sha256(block, ser):
     # Write block to SHA-2.
     for i in range(len(block) / 4):
-        message = [SOC, WRITE_CMD, SHA1_ADDR_PREFIX,] + [sha256_block_addr[i]] +\
+        message = [SOC, WRITE_CMD, SHA256_ADDR_PREFIX,] + [sha256_block_addr[i]] +\
                   block[(i * 4) : ((i * 4 ) + 4)] + [EOC]
         write_serial_bytes(message, ser)
 
     # Start initial block hashing, wait and check status.
-    write_serial_bytes([SOC, WRITE_CMD, SHA1_ADDR_PREFIX, SHA1_ADDR_CTRL, '\x00', '\x00', '\x00', '\x01', EOC], ser)
+    write_serial_bytes([SOC, WRITE_CMD, SHA256_ADDR_PREFIX, SHA1_ADDR_CTRL, '\x00', '\x00', '\x00', '\x01', EOC], ser)
     time.sleep(0.1)
     write_serial_bytes([SOC, READ_CMD, SHA256_ADDR_PREFIX, SHA256_ADDR_STATUS, EOC], ser)
 
@@ -286,13 +286,13 @@ def single_block_test_sha256(block, ser):
 #-------------------------------------------------------------------
 def double_block_test_sha256(block1, block2, ser):
     # Write block1 to SHA-256.
-    for i in range(len(block) / 4):
-        message = [SOC, WRITE_CMD, SHA1_ADDR_PREFIX,] + [sha256_block_addr[i]] +\
+    for i in range(len(block1) / 4):
+        message = [SOC, WRITE_CMD, SHA256_ADDR_PREFIX,] + [sha256_block_addr[i]] +\
                   block1[(i * 4) : ((i * 4 ) + 4)] + [EOC]
         write_serial_bytes(message, ser)
 
     # Start initial block hashing, wait and check status.
-    write_serial_bytes([SOC, WRITE_CMD, SHA1_ADDR_PREFIX, SHA1_ADDR_CTRL, '\x00', '\x00', '\x00', '\x01', EOC], ser)
+    write_serial_bytes([SOC, WRITE_CMD, SHA256_ADDR_PREFIX, SHA1_ADDR_CTRL, '\x00', '\x00', '\x00', '\x01', EOC], ser)
     time.sleep(0.1)
     write_serial_bytes([SOC, READ_CMD, SHA256_ADDR_PREFIX, SHA256_ADDR_STATUS, EOC], ser)
 
@@ -303,13 +303,13 @@ def double_block_test_sha256(block1, block2, ser):
     print""
 
     # Write block2 to SHA-256.
-    for i in range(len(block) / 4):
-        message = [SOC, WRITE_CMD, SHA1_ADDR_PREFIX,] + [sha256_block_addr[i]] +\
+    for i in range(len(block2) / 4):
+        message = [SOC, WRITE_CMD, SHA256_ADDR_PREFIX,] + [sha256_block_addr[i]] +\
                   block2[(i * 4) : ((i * 4 ) + 4)] + [EOC]
         write_serial_bytes(message, ser)
 
     # Start next block hashing, wait and check status.
-    write_serial_bytes([SOC, WRITE_CMD, SHA1_ADDR_PREFIX, SHA1_ADDR_CTRL, '\x00', '\x00', '\x00', '\x02', EOC], ser)
+    write_serial_bytes([SOC, WRITE_CMD, SHA256_ADDR_PREFIX, SHA1_ADDR_CTRL, '\x00', '\x00', '\x00', '\x02', EOC], ser)
     time.sleep(0.1)
     write_serial_bytes([SOC, READ_CMD, SHA256_ADDR_PREFIX, SHA256_ADDR_STATUS, EOC], ser)
 
@@ -318,6 +318,39 @@ def double_block_test_sha256(block1, block2, ser):
         message = [SOC, READ_CMD, SHA256_ADDR_PREFIX] + [sha256_digest_addr[i]] + [EOC]
         write_serial_bytes(message, ser)
     print""
+
+
+#-------------------------------------------------------------------
+# huge_message_test_sha256()
+
+# Test with a message with a huge number (n) number of blocks.
+#-------------------------------------------------------------------
+def huge_message_test_sha256(block, n, ser):
+    # Write block to SHA-256.
+    for i in range(len(block) / 4):
+        message = [SOC, WRITE_CMD, SHA256_ADDR_PREFIX,] + [sha256_block_addr[i]] +\
+                  block[(i * 4) : ((i * 4 ) + 4)] + [EOC]
+        write_serial_bytes(message, ser)
+
+    # Start initial block hashing, wait.
+    write_serial_bytes([SOC, WRITE_CMD, SHA256_ADDR_PREFIX, SHA1_ADDR_CTRL, '\x00', '\x00', '\x00', '\x01', EOC], ser)
+    time.sleep(0.1)
+    print "Block 0 done."
+
+    # First blocl done.
+    n = n - 1
+
+    for i in range(n):
+        # Start next block hashing, wait.
+        write_serial_bytes([SOC, WRITE_CMD, SHA256_ADDR_PREFIX, SHA1_ADDR_CTRL, '\x00', '\x00', '\x00', '\x02', EOC], ser)
+        time.sleep(0.1)
+        print "Block %d done." % (i + 1)
+
+        # Extract contents of the digest registers.
+        for i in range(8):
+            message = [SOC, READ_CMD, SHA256_ADDR_PREFIX] + [sha256_digest_addr[i]] + [EOC]
+            write_serial_bytes(message, ser)
+            print""
 
 
 #-------------------------------------------------------------------
@@ -352,7 +385,7 @@ def single_block_test_sha1(block, ser):
 #-------------------------------------------------------------------
 def double_block_test_sha1(block1, block2, ser):
     # Write block1 to SHA-1.
-    for i in range(len(block) / 4):
+    for i in range(len(block1) / 4):
         message = [SOC, WRITE_CMD, SHA1_ADDR_PREFIX,] + [sha1_block_addr[i]] +\
                   block1[(i * 4) : ((i * 4 ) + 4)] + [EOC]
         write_serial_bytes(message, ser)
@@ -369,7 +402,7 @@ def double_block_test_sha1(block1, block2, ser):
     print""
 
     # Write block2 to SHA-1.
-    for i in range(len(block) / 4):
+    for i in range(len(block2) / 4):
         message = [SOC, WRITE_CMD, SHA1_ADDR_PREFIX,] + [sha1_block_addr[i]] +\
                   block2[(i * 4) : ((i * 4 ) + 4)] + [EOC]
         write_serial_bytes(message, ser)
@@ -461,14 +494,14 @@ def main():
                    '\x6D', '\x6E', '\x6F', '\x70', '\x6E', '\x6F', '\x70', '\x71',
                    '\x80', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00']
 
-    tc3_1_block = ['\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00',
+    tc3_2_block = ['\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00',
                    '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00',
                    '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00',
                    '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00',
                    '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00',
                    '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00',
                    '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00',
-                   '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x01', '\xC0'
+                   '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x01', '\xC0']
 
     tc3_1_sha1_expected = [0xF4286818, 0xC37B27AE, 0x0408F581,
                            0x84677148, 0x4A566572]
@@ -514,7 +547,6 @@ def main():
     # TC6: Double block message test as specified by NIST.
     print "TC6: Double block message test for SHA-256."
 
-
     tc6_1_sha256_expected = [0x85E655D6, 0x417A1795, 0x3363376A, 0x624CDE5C,
                              0x76E09589, 0xCAC5F811, 0xCC4B32C1, 0xF20E533A]
 
@@ -531,6 +563,26 @@ def main():
     print("")
     double_block_test_sha256(tc3_1_block, tc3_2_block, ser)
 
+    # TC7: Huge message test.
+    n = 10
+    print "TC7: Message with %d blocks test for SHA-256." % n
+    tc7_block = ['\xaa', '\x55', '\xaa', '\x55', '\xde', '\xad', '\xbe', '\xef',
+                 '\x55', '\xaa', '\x55', '\xaa', '\xf0', '\x0f', '\xf0', '\x0f',
+                 '\xaa', '\x55', '\xaa', '\x55', '\xde', '\xad', '\xbe', '\xef',
+                 '\x55', '\xaa', '\x55', '\xaa', '\xf0', '\x0f', '\xf0', '\x0f',
+                 '\xaa', '\x55', '\xaa', '\x55', '\xde', '\xad', '\xbe', '\xef',
+                 '\x55', '\xaa', '\x55', '\xaa', '\xf0', '\x0f', '\xf0', '\x0f',
+                 '\xaa', '\x55', '\xaa', '\x55', '\xde', '\xad', '\xbe', '\xef',
+                 '\x55', '\xaa', '\x55', '\xaa', '\xf0', '\x0f', '\xf0', '\x0f']
+
+    tc7_expected = [0xf407ff0d, 0xb9dce2f6, 0x9b9759a9, 0xd3cdc805,
+                    0xf250086d, 0x73bbefd5, 0xa972e0f7, 0x61a9c13e]
+
+    print "TC7: Expected digest values after %d blocks:" %n
+    for i in tc7_expected:
+        print("0x%08x " % i)
+    print("")
+    huge_message_test_sha256(tc7_block, n, ser)
     
     # Exit nicely.
     if VERBOSE:
