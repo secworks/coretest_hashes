@@ -57,6 +57,7 @@ module coretest_hashes(
   parameter UART_ADDR_PREFIX   = 8'h00;
   parameter SHA1_ADDR_PREFIX   = 8'h10;
   parameter SHA256_ADDR_PREFIX = 8'h20;
+  parameter SHA512_ADDR_PREFIX = 8'h30;
   
   
   //----------------------------------------------------------------
@@ -103,6 +104,15 @@ module coretest_hashes(
   wire [31 : 0] sha256_read_data;
   wire          sha256_error;
   wire [7 : 0]  sha256_debug;
+
+  // sha512 connections.
+  reg           sha512_cs;
+  reg           sha512_we;
+  reg [7 : 0]   sha512_address;
+  reg [31 : 0]  sha512_write_data;
+  wire [31 : 0] sha512_read_data;
+  wire          sha512_error;
+  wire [7 : 0]  sha512_debug;
   
   
   //----------------------------------------------------------------
@@ -197,6 +207,23 @@ module coretest_hashes(
                );
 
   
+  sha512 sha512(
+                // Clock and reset.
+                .clk(clk),
+                .reset_n(reset_n),
+
+                // Control.
+                .cs(sha512_cs),
+                .we(sha512_we),
+
+                // Data ports.
+                .address(sha512_address),
+                .write_data(sha512_write_data),
+                .read_data(sha512_read_data),
+                .error(sha512_error)
+               );
+
+
   //----------------------------------------------------------------
   // address_mux
   //
@@ -223,6 +250,11 @@ module coretest_hashes(
       sha256_we          = 0;
       sha256_address     = 8'h00;
       sha256_write_data  = 32'h00000000;
+
+      sha512_cs          = 0;
+      sha512_we          = 0;
+      sha512_address     = 8'h00;
+      sha512_write_data  = 32'h00000000;
 
 
       case (coretest_address[15 : 8])
@@ -256,6 +288,17 @@ module coretest_hashes(
             sha256_write_data  = coretest_write_data;
             coretest_read_data = sha256_read_data;
             coretest_error     = sha256_error;
+          end
+
+
+        SHA512_ADDR_PREFIX:
+          begin
+            sha512_cs          = coretest_cs;
+            sha512_we          = coretest_we;
+            sha512_address     = coretest_address[7 : 0];
+            sha512_write_data  = coretest_write_data;
+            coretest_read_data = sha512_read_data;
+            coretest_error     = sha512_error;
           end
         
         
