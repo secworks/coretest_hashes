@@ -12,6 +12,10 @@
 # Note: This program requires the PySerial module.
 # http://pyserial.sourceforge.net/
 #
+# The single and dual block test cases are taken from the
+# NIST KAT document:
+# http://csrc.nist.gov/groups/ST/toolkit/documents/Examples/SHA_All.pdf
+#
 # 
 # Author: Joachim Strömbergson
 # Copyright (c) 2014  Secworks Sweden AB
@@ -583,6 +587,26 @@ def main():
         print("0x%08x " % i)
     print("")
     huge_message_test_sha256(tc7_block, n, ser)
+
+
+    # TC8: Single block test of SHA-512
+    print "TC2: Single block message test for SHA-1."
+    tc8_block = ['\x61', '\x62', '\x63', '\x80', '\x00', '\x00', '\x00', '\x00',
+                 '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00',
+                 '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00',
+                 '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00',
+                 '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00',
+                 '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00',
+                 '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00',
+                 '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00',
+                 '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00',
+                 '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00',
+                 '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00',
+                 '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00',
+                 '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00',
+                 '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00',
+                 '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00',
+                 '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x18']
     
     # Exit nicely.
     if VERBOSE:
