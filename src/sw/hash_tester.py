@@ -616,6 +616,8 @@ def main():
     tc8_224_expected = [0x4634270f, 0x707b6a54, 0xdaae7530, 0x460842e2,
                         0x0e37ed26, 0x5ceee9a4, 0x3e8924aa]
 
+    tc8_256_expected = [0x53048e26, 0x81941ef9, 0x9b2e29b7, 0x6b4c7dab,
+                        0xe4c2d0c6, 0x34fc6d46, 0xe0e2f131, 0x07e7af23]
 
     # Exit nicely.
     if VERBOSE:
