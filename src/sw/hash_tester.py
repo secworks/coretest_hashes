@@ -612,7 +612,11 @@ def main():
                         0x12e6fa4e, 0x89a97ea2, 0x0a9eeee6, 0x4b55d39a,
                         0x2192992a, 0x274fc1a8, 0x36ba3c23, 0xa3feebbd,
                         0x454d4423, 0x643ce80e, 0x2a9ac94f, 0xa54ca49f]
-    
+
+    tc8_224_expected = [0x4634270f, 0x707b6a54, 0xdaae7530, 0x460842e2,
+                        0x0e37ed26, 0x5ceee9a4, 0x3e8924aa]
+
+
     # Exit nicely.
     if VERBOSE:
         print "Done. Closing device."
