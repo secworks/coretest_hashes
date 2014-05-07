@@ -256,14 +256,14 @@ sha512_block_addr = [SHA512_ADDR_BLOCK0,  SHA512_ADDR_BLOCK1,
                      SHA512_ADDR_BLOCK28, SHA512_ADDR_BLOCK29,
                      SHA512_ADDR_BLOCK30, SHA512_ADDR_BLOCK31]
 
-sha512_digest_addr = [SHA256_ADDR_DIGEST0,  SHA256_ADDR_DIGEST1,
-                      SHA256_ADDR_DIGEST2,  SHA256_ADDR_DIGEST3,
-                      SHA256_ADDR_DIGEST4,  SHA256_ADDR_DIGEST5,
-                      SHA256_ADDR_DIGEST6,  SHA256_ADDR_DIGEST7,
-                      SHA256_ADDR_DIGEST8,  SHA256_ADDR_DIGEST9,
-                      SHA256_ADDR_DIGEST10, SHA256_ADDR_DIGEST11,
-                      SHA256_ADDR_DIGEST12, SHA256_ADDR_DIGEST13,
-                      SHA256_ADDR_DIGEST14, SHA256_ADDR_DIGEST15]
+sha512_digest_addr = [SHA512_ADDR_DIGEST0,  SHA512_ADDR_DIGEST1,
+                      SHA512_ADDR_DIGEST2,  SHA512_ADDR_DIGEST3,
+                      SHA512_ADDR_DIGEST4,  SHA512_ADDR_DIGEST5,
+                      SHA512_ADDR_DIGEST6,  SHA512_ADDR_DIGEST7,
+                      SHA512_ADDR_DIGEST8,  SHA512_ADDR_DIGEST9,
+                      SHA512_ADDR_DIGEST10, SHA512_ADDR_DIGEST11,
+                      SHA512_ADDR_DIGEST12, SHA512_ADDR_DIGEST13,
+                      SHA512_ADDR_DIGEST14, SHA512_ADDR_DIGEST15]
 
 
 #-------------------------------------------------------------------
@@ -690,7 +690,7 @@ def main():
 
 
     # TC8: Single block test of SHA-512
-    print "TC2: Single block message test for SHA-1."
+    print "TC8: Single block message test for SHA-512/x."
     tc8_block = ['\x61', '\x62', '\x63', '\x80', '\x00', '\x00', '\x00', '\x00',
                  '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00',
                  '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00',
