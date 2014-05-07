@@ -148,6 +148,66 @@ SHA256_ADDR_DIGEST5     = '\x25'
 SHA256_ADDR_DIGEST6     = '\x26'
 SHA256_ADDR_DIGEST7     = '\x27'
 
+SHA512_ADDR_PREFIX      = '\x30'
+SHA512_ADDR_NAME0       = '\x00'
+SHA512_ADDR_NAME1       = '\x01'
+SHA512_ADDR_VERSION     = '\x02'
+SHA512_ADDR_CTRL        = '\x08'
+SHA512_ADDR_STATUS      = '\x09'
+SHA512_ADDR_BLOCK0      = '\x10'
+SHA512_ADDR_BLOCK1      = '\x11'
+SHA512_ADDR_BLOCK2      = '\x12'
+SHA512_ADDR_BLOCK3      = '\x13'
+SHA512_ADDR_BLOCK4      = '\x14'
+SHA512_ADDR_BLOCK5      = '\x15'
+SHA512_ADDR_BLOCK6      = '\x16'
+SHA512_ADDR_BLOCK7      = '\x17'
+SHA512_ADDR_BLOCK8      = '\x18'
+SHA512_ADDR_BLOCK9      = '\x19'
+SHA512_ADDR_BLOCK10     = '\x1a'
+SHA512_ADDR_BLOCK11     = '\x1b'
+SHA512_ADDR_BLOCK12     = '\x1c'
+SHA512_ADDR_BLOCK13     = '\x1d'
+SHA512_ADDR_BLOCK14     = '\x1e'
+SHA512_ADDR_BLOCK15     = '\x1f'
+SHA512_ADDR_BLOCK16     = '\x20'
+SHA512_ADDR_BLOCK17     = '\x21'
+SHA512_ADDR_BLOCK18     = '\x22'
+SHA512_ADDR_BLOCK19     = '\x23'
+SHA512_ADDR_BLOCK20     = '\x24'
+SHA512_ADDR_BLOCK21     = '\x25'
+SHA512_ADDR_BLOCK22     = '\x26'
+SHA512_ADDR_BLOCK23     = '\x27'
+SHA512_ADDR_BLOCK24     = '\x28'
+SHA512_ADDR_BLOCK25     = '\x29'
+SHA512_ADDR_BLOCK26     = '\x2a'
+SHA512_ADDR_BLOCK27     = '\x2b'
+SHA512_ADDR_BLOCK28     = '\x2c'
+SHA512_ADDR_BLOCK29     = '\x2d'
+SHA512_ADDR_BLOCK30     = '\x2e'
+SHA512_ADDR_BLOCK31     = '\x2f'
+SHA512_ADDR_DIGEST0     = '\x40'
+SHA512_ADDR_DIGEST1     = '\x41'
+SHA512_ADDR_DIGEST2     = '\x42'
+SHA512_ADDR_DIGEST3     = '\x43'
+SHA512_ADDR_DIGEST4     = '\x44'
+SHA512_ADDR_DIGEST5     = '\x45'
+SHA512_ADDR_DIGEST6     = '\x46'
+SHA512_ADDR_DIGEST7     = '\x47'
+SHA512_ADDR_DIGEST8     = '\x48'
+SHA512_ADDR_DIGEST9     = '\x49'
+SHA512_ADDR_DIGEST10    = '\x4a'
+SHA512_ADDR_DIGEST11    = '\x4b'
+SHA512_ADDR_DIGEST12    = '\x4c'
+SHA512_ADDR_DIGEST13    = '\x4d'
+SHA512_ADDR_DIGEST14    = '\x4e'
+SHA512_ADDR_DIGEST15    = '\x4f'
+
+MODE_SHA_512_224 = '\x00'
+MODE_SHA_512_256 = '\x01'
+MODE_SHA_384     = '\x02'
+MODE_SHA_512     = '\x03'
+
 NAME0_ADDR            = '\x00'
 NAME1_ADDR            = '\x01'
 VERSION_ADDR          = '\x02'
@@ -256,6 +316,20 @@ def write_serial_bytes(tx_cmd, serialport):
 
     # Allow the device to complete the transaction.
     time.sleep(0.1)
+
+
+#-------------------------------------------------------------------
+# single_block_test_sha512x()
+#
+# Write a given block to SHA-512/x and perform single block
+# processing for the given mode.
+#-------------------------------------------------------------------
+def single_block_test_sha512x(block, mode, ser):
+    # Write block to SHA-512.
+    for i in range(len(block) / 4):
+        message = [SOC, WRITE_CMD, SHA512_ADDR_PREFIX,] + [sha512_block_addr[i]] +\
+                  block[(i * 4) : ((i * 4 ) + 4)] + [EOC]
+        write_serial_bytes(message, ser)
 
 
 #-------------------------------------------------------------------
