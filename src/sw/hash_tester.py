@@ -564,25 +564,25 @@ def main():
     double_block_test_sha256(tc3_1_block, tc3_2_block, ser)
 
     # TC7: Huge message test.
-#    n = 10
-#    print "TC7: Message with %d blocks test for SHA-256." % n
-#    tc7_block = ['\xaa', '\x55', '\xaa', '\x55', '\xde', '\xad', '\xbe', '\xef',
-#                 '\x55', '\xaa', '\x55', '\xaa', '\xf0', '\x0f', '\xf0', '\x0f',
-#                 '\xaa', '\x55', '\xaa', '\x55', '\xde', '\xad', '\xbe', '\xef',
-#                 '\x55', '\xaa', '\x55', '\xaa', '\xf0', '\x0f', '\xf0', '\x0f',
-#                 '\xaa', '\x55', '\xaa', '\x55', '\xde', '\xad', '\xbe', '\xef',
-#                 '\x55', '\xaa', '\x55', '\xaa', '\xf0', '\x0f', '\xf0', '\x0f',
-#                 '\xaa', '\x55', '\xaa', '\x55', '\xde', '\xad', '\xbe', '\xef',
-#                 '\x55', '\xaa', '\x55', '\xaa', '\xf0', '\x0f', '\xf0', '\x0f']
-#
-#    tc7_expected = [0xf407ff0d, 0xb9dce2f6, 0x9b9759a9, 0xd3cdc805,
-#                    0xf250086d, 0x73bbefd5, 0xa972e0f7, 0x61a9c13e]
-#
-#    print "TC7: Expected digest values after %d blocks:" %n
-#    for i in tc7_expected:
-#        print("0x%08x " % i)
-#    print("")
-#    huge_message_test_sha256(tc7_block, n, ser)
+    n = 10
+    print "TC7: Message with %d blocks test for SHA-256." % n
+    tc7_block = ['\xaa', '\x55', '\xaa', '\x55', '\xde', '\xad', '\xbe', '\xef',
+                 '\x55', '\xaa', '\x55', '\xaa', '\xf0', '\x0f', '\xf0', '\x0f',
+                 '\xaa', '\x55', '\xaa', '\x55', '\xde', '\xad', '\xbe', '\xef',
+                 '\x55', '\xaa', '\x55', '\xaa', '\xf0', '\x0f', '\xf0', '\x0f',
+                 '\xaa', '\x55', '\xaa', '\x55', '\xde', '\xad', '\xbe', '\xef',
+                 '\x55', '\xaa', '\x55', '\xaa', '\xf0', '\x0f', '\xf0', '\x0f',
+                 '\xaa', '\x55', '\xaa', '\x55', '\xde', '\xad', '\xbe', '\xef',
+                 '\x55', '\xaa', '\x55', '\xaa', '\xf0', '\x0f', '\xf0', '\x0f']
+
+    tc7_expected = [0xf407ff0d, 0xb9dce2f6, 0x9b9759a9, 0xd3cdc805,
+                    0xf250086d, 0x73bbefd5, 0xa972e0f7, 0x61a9c13e]
+
+    print "TC7: Expected digest values after %d blocks:" %n
+    for i in tc7_expected:
+        print("0x%08x " % i)
+    print("")
+    huge_message_test_sha256(tc7_block, n, ser)
     
     # Exit nicely.
     if VERBOSE:
