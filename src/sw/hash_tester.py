@@ -239,6 +239,32 @@ sha256_digest_addr = [SHA256_ADDR_DIGEST0,  SHA256_ADDR_DIGEST1,
                       SHA256_ADDR_DIGEST4,  SHA256_ADDR_DIGEST5,
                       SHA256_ADDR_DIGEST6,  SHA256_ADDR_DIGEST7]
 
+sha512_block_addr = [SHA512_ADDR_BLOCK0,  SHA512_ADDR_BLOCK1,
+                     SHA512_ADDR_BLOCK2,  SHA512_ADDR_BLOCK3,
+                     SHA512_ADDR_BLOCK4,  SHA512_ADDR_BLOCK5,
+                     SHA512_ADDR_BLOCK6,  SHA512_ADDR_BLOCK7,
+                     SHA512_ADDR_BLOCK8,  SHA512_ADDR_BLOCK9,
+                     SHA512_ADDR_BLOCK10, SHA512_ADDR_BLOCK11,
+                     SHA512_ADDR_BLOCK12, SHA512_ADDR_BLOCK13,
+                     SHA512_ADDR_BLOCK14, SHA512_ADDR_BLOCK15,
+                     SHA512_ADDR_BLOCK16, SHA512_ADDR_BLOCK17,
+                     SHA512_ADDR_BLOCK18, SHA512_ADDR_BLOCK19,
+                     SHA512_ADDR_BLOCK20, SHA512_ADDR_BLOCK21,
+                     SHA512_ADDR_BLOCK22, SHA512_ADDR_BLOCK23,
+                     SHA512_ADDR_BLOCK24, SHA512_ADDR_BLOCK25,
+                     SHA512_ADDR_BLOCK26, SHA512_ADDR_BLOCK27,
+                     SHA512_ADDR_BLOCK28, SHA512_ADDR_BLOCK29,
+                     SHA512_ADDR_BLOCK30, SHA512_ADDR_BLOCK31]
+
+sha512_digest_addr = [SHA256_ADDR_DIGEST0,  SHA256_ADDR_DIGEST1,
+                      SHA256_ADDR_DIGEST2,  SHA256_ADDR_DIGEST3,
+                      SHA256_ADDR_DIGEST4,  SHA256_ADDR_DIGEST5,
+                      SHA256_ADDR_DIGEST6,  SHA256_ADDR_DIGEST7,
+                      SHA256_ADDR_DIGEST8,  SHA256_ADDR_DIGEST9,
+                      SHA256_ADDR_DIGEST10, SHA256_ADDR_DIGEST11,
+                      SHA256_ADDR_DIGEST12, SHA256_ADDR_DIGEST13,
+                      SHA256_ADDR_DIGEST14, SHA256_ADDR_DIGEST15]
+
 
 #-------------------------------------------------------------------
 # print_response()
