@@ -607,6 +607,11 @@ def main():
                  '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00',
                  '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00',
                  '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x18']
+
+    tc8_512_expected = [0xddaf35a1, 0x93617aba, 0xcc417349, 0xae204131,
+                        0x12e6fa4e, 0x89a97ea2, 0x0a9eeee6, 0x4b55d39a,
+                        0x2192992a, 0x274fc1a8, 0x36ba3c23, 0xa3feebbd,
+                        0x454d4423, 0x643ce80e, 0x2a9ac94f, 0xa54ca49f]
     
     # Exit nicely.
     if VERBOSE:
