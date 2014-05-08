@@ -5,9 +5,9 @@
 # hash_tester.py
 # --------------
 # This program sends several commands to the coretest_hashed subsystem
-# in order to verify the SHA-1 and SHA-256 hash function cores.
-# The program uses the built in hash implementations in Python
-# to do functional comparison and validation.
+# in order to verify the SHA-1, SHA-256 and SHA-512/x hash function
+# cores. The program will use the built in hash implementations in
+# Python to do functional comparison and validation.
 #
 # Note: This program requires the PySerial module.
 # http://pyserial.sourceforge.net/
