@@ -465,6 +465,58 @@ def single_block_test_sha512x(block, mode, ser):
 
 
 #-------------------------------------------------------------------
+# dual_block_test_sha512x()
+#
+# Write a given block to SHA-512/x and perform single block
+# processing for the given mode.
+#-------------------------------------------------------------------
+def dual_block_test_sha512x(block0, block1, mode, ser):
+    # Write block0 to SHA-512.
+    for i in range(len(block0) / 4):
+        message = [SOC, WRITE_CMD, SHA512_ADDR_PREFIX,] + [sha512_block_addr[i]] +\
+                  block0[(i * 4) : ((i * 4 ) + 4)] + [EOC]
+        write_serial_bytes(message, ser)
+
+    # Start initial block hashing, wait and check status.
+    mode_cmd = chr(ord(SHA512_CTRL_INIT_CMD) + (ord(mode) << SHA512_CTRL_MODE_LOW))
+    write_serial_bytes([SOC, WRITE_CMD, SHA512_ADDR_PREFIX, SHA512_ADDR_CTRL,
+                        '\x00', '\x00', '\x00', mode_cmd, EOC], ser)
+    time.sleep(DELAY_TIME)
+    write_serial_bytes([SOC, READ_CMD, SHA512_ADDR_PREFIX, SHA512_ADDR_STATUS, EOC], ser)
+    time.sleep(DELAY_TIME)
+
+    # Write block1 to SHA-512.
+    for i in range(len(block1) / 4):
+        message = [SOC, WRITE_CMD, SHA512_ADDR_PREFIX,] + [sha512_block_addr[i]] +\
+                  block1[(i * 4) : ((i * 4 ) + 4)] + [EOC]
+        write_serial_bytes(message, ser)
+
+    # Start next block hashing, wait and check status.
+    mode_cmd = chr(ord(SHA512_CTRL_NEXT_CMD) + (ord(mode) << SHA512_CTRL_MODE_LOW))
+    write_serial_bytes([SOC, WRITE_CMD, SHA512_ADDR_PREFIX, SHA512_ADDR_CTRL,
+                        '\x00', '\x00', '\x00', mode_cmd, EOC], ser)
+    time.sleep(DELAY_TIME)
+    write_serial_bytes([SOC, READ_CMD, SHA512_ADDR_PREFIX, SHA512_ADDR_STATUS, EOC], ser)
+    time.sleep(DELAY_TIME)
+
+    # Select the correct number of digest addresses to read.
+    if (mode == MODE_SHA_512_224):
+        mode_digest_addr = sha512_digest_addr[0 : 7]
+    elif (mode == MODE_SHA_512_256):
+        mode_digest_addr = sha512_digest_addr[0 : 8]
+    elif (mode == MODE_SHA_384):
+        mode_digest_addr = sha512_digest_addr[0 : 12]
+    elif (mode == MODE_SHA_512):
+        mode_digest_addr = sha512_digest_addr
+
+    # Extract the digest.
+    for digest_addr in mode_digest_addr:
+        message = [SOC, READ_CMD, SHA512_ADDR_PREFIX] + [digest_addr] + [EOC]
+        write_serial_bytes(message, ser)
+    print""
+
+
+#-------------------------------------------------------------------
 # single_block_test_sha256()
 #
 # Write a given block to SHA-256 and perform single block
