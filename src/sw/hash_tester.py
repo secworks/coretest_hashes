@@ -74,7 +74,7 @@ VERBOSE = False
 
 # Delay times we wait
 PROC_DELAY_TIME = 0.0001
-COMM_DELAY_TIME = 0.05
+COMM_DELAY_TIME = 0.03
 
 # Memory map.
 SOC                   = '\x55'
