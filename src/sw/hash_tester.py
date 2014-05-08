@@ -790,8 +790,8 @@ def main():
     my_thread.start()
 
     # Run the enabled test cases.
-    tc_list = [(tc1, True), (tc2, True), (tc3, True), (tc4, True),
-               (tc5, True), (tc6, True), (tc7, True), (tc8, True),
+    tc_list = [(tc1, False), (tc2, False), (tc3, False), (tc4, False),
+               (tc5, False), (tc6, False), (tc7, False), (tc8, True),
                (tc9, True)]
     for (test_case, action) in tc_list:
         if action:
