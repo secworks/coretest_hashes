@@ -372,7 +372,7 @@ def single_block_test_sha256(block, ser):
         write_serial_bytes(message, ser)
 
     # Start initial block hashing, wait and check status.
-    write_serial_bytes([SOC, WRITE_CMD, SHA256_ADDR_PREFIX, SHA1_ADDR_CTRL, '\x00', '\x00', '\x00', '\x01', EOC], ser)
+    write_serial_bytes([SOC, WRITE_CMD, SHA256_ADDR_PREFIX, SHA256_ADDR_CTRL, '\x00', '\x00', '\x00', '\x01', EOC], ser)
     time.sleep(0.1)
     write_serial_bytes([SOC, READ_CMD, SHA256_ADDR_PREFIX, SHA256_ADDR_STATUS, EOC], ser)
 
