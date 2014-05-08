@@ -636,11 +636,11 @@ def main():
 
     # TC4: Read name and version from SHA-256 core.
     print "TC4: Reading name, type and version words from SHA-256 core."
-    my_cmd = [SOC, READ_CMD, SHA256_ADDR_PREFIX, NAME0_ADDR, EOC]
+    my_cmd = [SOC, READ_CMD, SHA256_ADDR_PREFIX, SHA256_ADDR_NAME0, EOC]
     write_serial_bytes(my_cmd, ser)
-    my_cmd = [SOC, READ_CMD, SHA256_ADDR_PREFIX, NAME1_ADDR, EOC]
+    my_cmd = [SOC, READ_CMD, SHA256_ADDR_PREFIX, SHA256_ADDR_NAME1, EOC]
     write_serial_bytes(my_cmd, ser)
-    my_cmd = [SOC, READ_CMD, SHA256_ADDR_PREFIX, VERSION_ADDR, EOC]
+    my_cmd = [SOC, READ_CMD, SHA256_ADDR_PREFIX, SHA256_ADDR_VERSION, EOC]
     write_serial_bytes(my_cmd, ser)
     print""
 
@@ -677,7 +677,8 @@ def main():
     print("")
     double_block_test_sha256(tc3_1_block, tc3_2_block, ser)
 
-    # TC7: Huge message test.
+
+    # TC7: SHA-256 Huge message test.
     n = 10
     print "TC7: Message with %d blocks test for SHA-256." % n
     tc7_block = ['\xaa', '\x55', '\xaa', '\x55', '\xde', '\xad', '\xbe', '\xef',
@@ -698,7 +699,19 @@ def main():
     print("")
     huge_message_test_sha256(tc7_block, n, ser)
 
-    # TC8: Single block test of SHA-512
+
+    # TC8: Read name and version from SHA-512 core.
+    print "TC8: Reading name, type and version words from SHA-512 core."
+    my_cmd = [SOC, READ_CMD, SHA512_ADDR_PREFIX, SHA512_ADDR_NAME0, EOC]
+    write_serial_bytes(my_cmd, ser)
+    my_cmd = [SOC, READ_CMD, SHA512_ADDR_PREFIX, SHA512_ADDR_NAME1, EOC]
+    write_serial_bytes(my_cmd, ser)
+    my_cmd = [SOC, READ_CMD, SHA512_ADDR_PREFIX, SHA512_ADDR_VERSION, EOC]
+    write_serial_bytes(my_cmd, ser)
+    print""
+
+
+    # TC9: Single block test of SHA-512
     print "TC9: Single block message test for SHA-512/x."
     tc8_block = ['\x61', '\x62', '\x63', '\x80', '\x00', '\x00', '\x00', '\x00',
                  '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00',
