@@ -361,6 +361,12 @@ def single_block_test_sha512x(block, mode, ser):
                   block[(i * 4) : ((i * 4 ) + 4)] + [EOC]
         write_serial_bytes(message, ser)
 
+    # Start initial block hashing, wait and check status.
+    write_serial_bytes([SOC, WRITE_CMD, SHA512_ADDR_PREFIX, SHA512_ADDR_CTRL,
+                        '\x00', '\x00', '\x00', SHA512_CTRL_INIT_CMD, EOC], ser)
+    time.sleep(DELAY_TIME)
+    write_serial_bytes([SOC, READ_CMD, SHA512_ADDR_PREFIX, SHA512_ADDR_STATUS, EOC], ser)
+
 
 #-------------------------------------------------------------------
 # single_block_test_sha256()
@@ -543,6 +549,17 @@ def double_block_test_sha1(block1, block2, ser):
 
 
 #-------------------------------------------------------------------
+# TC1: Read name and version from SHA-1 core.
+#-------------------------------------------------------------------
+def tc1(ser):
+    print "TC1: Reading name, type and version words from SHA-1 core."
+    write_serial_bytes([SOC, READ_CMD, SHA1_ADDR_PREFIX, SHA1_ADDR_NAME0, EOC], ser)
+    write_serial_bytes([SOC, READ_CMD, SHA1_ADDR_PREFIX, SHA1_ADDR_NAME1, EOC], ser)
+    write_serial_bytes([SOC, READ_CMD, SHA1_ADDR_PREFIX, SHA1_ADDR_VERSION, EOC], ser)
+    print""
+
+
+#-------------------------------------------------------------------
 # main()
 #
 # Parse any arguments and run the tests.
@@ -576,13 +593,11 @@ def main():
     my_thread.daemon = True
     my_thread.start()
 
-
-    # TC1: Read name and version from SHA-1 core.
-    print "TC1: Reading name, type and version words from SHA-1 core."
-    write_serial_bytes([SOC, READ_CMD, SHA1_ADDR_PREFIX, SHA1_ADDR_NAME0, EOC], ser)
-    write_serial_bytes([SOC, READ_CMD, SHA1_ADDR_PREFIX, SHA1_ADDR_NAME1, EOC], ser)
-    write_serial_bytes([SOC, READ_CMD, SHA1_ADDR_PREFIX, SHA1_ADDR_VERSION, EOC], ser)
-    print""
+    # Do the enabled test cases.
+    tc_list = [(tc1, True)]
+    for (test_case, action) in tc_list:
+        if action:
+            test_case(ser)
 
 
     # TC2: Single block message test as specified by NIST.
