@@ -18,7 +18,7 @@
 #
 # 
 # Author: Joachim Strömbergson
-# Copyright (c) 2014  Secworks Sweden AB
+# Copyright (c) 2014, Secworks Sweden AB
 # 
 # Redistribution and use in source and binary forms, with or 
 # without modification, are permitted provided that the following 
