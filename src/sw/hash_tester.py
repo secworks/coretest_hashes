@@ -296,6 +296,23 @@ NIST_512_DOUBLE1 = ['\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x0
                    '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00',
                    '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x01', '\xC0']
 
+NIST_1024_SINGLE = ['\x61', '\x62', '\x63', '\x80', '\x00', '\x00', '\x00', '\x00',
+                    '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00',
+                    '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00',
+                    '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00',
+                    '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00',
+                    '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00',
+                    '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00',
+                    '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00',
+                    '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00',
+                    '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00',
+                    '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00',
+                    '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00',
+                    '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00',
+                    '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00',
+                    '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00',
+                    '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x18']
+
 
 #-------------------------------------------------------------------
 # print_response()
@@ -719,41 +736,51 @@ def tc8(ser):
 
 #-------------------------------------------------------------------
 # TC9: Single block test of SHA-512
+#
+# We do this for all modes.
 #-------------------------------------------------------------------
 def tc9(ser):
     print "TC9: Single block message test for SHA-512/x."
-    tc8_block = ['\x61', '\x62', '\x63', '\x80', '\x00', '\x00', '\x00', '\x00',
-                 '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00',
-                 '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00',
-                 '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00',
-                 '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00',
-                 '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00',
-                 '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00',
-                 '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00',
-                 '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00',
-                 '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00',
-                 '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00',
-                 '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00',
-                 '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00',
-                 '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00',
-                 '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00',
-                 '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x18']
 
-    tc8_512_expected = [0xddaf35a1, 0x93617aba, 0xcc417349, 0xae204131,
+    tc9_224_expected = [0x4634270f, 0x707b6a54, 0xdaae7530, 0x460842e2,
+                        0x0e37ed26, 0x5ceee9a4, 0x3e8924aa]
+
+    tc9_256_expected = [0x53048e26, 0x81941ef9, 0x9b2e29b7, 0x6b4c7dab,
+                        0xe4c2d0c6, 0x34fc6d46, 0xe0e2f131, 0x07e7af23]
+
+    tc9_384_expected = [0xcb00753f, 0x45a35e8b, 0xb5a03d69, 0x9ac65007,
+                        0x272c32ab, 0x0eded163, 0x1a8b605a, 0x43ff5bed,
+                        0x8086072b, 0xa1e7cc23, 0x58baeca1, 0x34c825a7]
+
+    tc9_512_expected = [0xddaf35a1, 0x93617aba, 0xcc417349, 0xae204131,
                         0x12e6fa4e, 0x89a97ea2, 0x0a9eeee6, 0x4b55d39a,
                         0x2192992a, 0x274fc1a8, 0x36ba3c23, 0xa3feebbd,
                         0x454d4423, 0x643ce80e, 0x2a9ac94f, 0xa54ca49f]
 
-    tc8_224_expected = [0x4634270f, 0x707b6a54, 0xdaae7530, 0x460842e2,
-                        0x0e37ed26, 0x5ceee9a4, 0x3e8924aa]
+    print "TC9-1: Expected digest values for SHA-512/224 as specified by NIST:"
+    for i in tc9_224_expected:
+        print("0x%08x " % i)
+    single_block_test_sha512x(NIST_1024_SINGLE, MODE_SHA_512_224, ser)
+    print("")
 
-    tc8_256_expected = [0x53048e26, 0x81941ef9, 0x9b2e29b7, 0x6b4c7dab,
-                        0xe4c2d0c6, 0x34fc6d46, 0xe0e2f131, 0x07e7af23]
+    print "TC9-2: Expected digest values for SHA-512/256 as specified by NIST:"
+    for i in tc9_256_expected:
+        print("0x%08x " % i)
+    single_block_test_sha512x(NIST_1024_SINGLE, MODE_SHA_512_256, ser)
+    print("")
 
-    tc8_384_expected = [0xcb00753f, 0x45a35e8b, 0xb5a03d69, 0x9ac65007,
-                        0x272c32ab, 0x0eded163, 0x1a8b605a, 0x43ff5bed,
-                        0x8086072b, 0xa1e7cc23, 0x58baeca1, 0x34c825a7]
-        
+    print "TC9-3: Expected digest values for SHA-384 as specified by NIST:"
+    for i in tc9_384_expected:
+        print("0x%08x " % i)
+    single_block_test_sha512x(NIST_1024_SINGLE, MODE_SHA_384, ser)
+    print("")
+
+    print "TC9-4: Expected digest values for SHA-512 as specified by NIST:"
+    for i in tc9_512_expected:
+        print("0x%08x " % i)
+    single_block_test_sha512x(NIST_1024_SINGLE, MODE_SHA_512, ser)
+    print("")
+
 
 #-------------------------------------------------------------------
 # main()
