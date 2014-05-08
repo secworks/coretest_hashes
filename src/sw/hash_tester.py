@@ -839,7 +839,7 @@ def tc8(ser):
 
 
 #-------------------------------------------------------------------
-# TC9: Single block test of SHA-512
+# TC9: Single block tests of SHA-512/x
 #
 # We do this for all modes.
 #-------------------------------------------------------------------
@@ -887,6 +887,54 @@ def tc9(ser):
 
 
 #-------------------------------------------------------------------
+# TC10: Dual block tests of SHA-512/x
+#
+# We do this for all modes.
+#-------------------------------------------------------------------
+def tc10(ser):
+    print "TC9: Single block message test for SHA-512/x."
+
+    tc10_224_expected = [0x23fec5bb, 0x94d60b23, 0x30819264, 0x0b0c4533,
+                         0x35d66473, 0x4fe40e72, 0x68674af9]
+
+    tc10_256_expected = [0x3928e184, 0xfb8690f8, 0x40da3988, 0x121d31be,
+                         0x65cb9d3e, 0xf83ee614, 0x6feac861, 0xe19b563a]
+
+    tc10_384_expected = [0xcb00753f, 0x45a35e8b, 0xb5a03d69, 0x9ac65007,
+                         0x272c32ab, 0x0eded163, 0x1a8b605a, 0x43ff5bed,
+                         0x8086072b, 0xa1e7cc23, 0x58baeca1, 0x34c825a7]
+
+    tc10_512_expected = [0x8e959b75, 0xdae313da, 0x8cf4f728, 0x14fc143f,
+                         0x8f7779c6, 0xeb9f7fa1, 0x7299aead, 0xb6889018,
+                         0x501d289e, 0x4900f7e4, 0x331b99de, 0xc4b5433a,
+                         0xc7d329ee, 0xb6dd2654, 0x5e96e55b, 0x874be909]
+
+    print "TC10-1: Expected digest values for SHA-512/224 as specified by NIST:"
+    for i in tc10_224_expected:
+        print("0x%08x " % i)
+    dual_block_test_sha512x(NIST_1024_DOUBLE0, NIST_1024_DOUBLE1, MODE_SHA_512_224, ser)
+    print("")
+
+    print "TC10-2: Expected digest values for SHA-512/256 as specified by NIST:"
+    for i in tc10_256_expected:
+        print("0x%08x " % i)
+    dual_block_test_sha512x(NIST_1024_DOUBLE0, NIST_1024_DOUBLE1, MODE_SHA_512_256, ser)
+    print("")
+
+    print "TC10-3: Expected digest values for SHA-384 as specified by NIST:"
+    for i in tc10_384_expected:
+        print("0x%08x " % i)
+    dual_block_test_sha512x(NIST_1024_DOUBLE0, NIST_1024_DOUBLE1, MODE_SHA_384, ser)
+    print("")
+
+    print "TC10-4: Expected digest values for SHA-512 as specified by NIST:"
+    for i in tc10_512_expected:
+        print("0x%08x " % i)
+    dual_block_test_sha512x(NIST_1024_DOUBLE0, NIST_1024_DOUBLE1, MODE_SHA_512, ser)
+    print("")
+
+
+#-------------------------------------------------------------------
 # main()
 #
 # Parse any arguments and run the tests.
@@ -922,8 +970,8 @@ def main():
 
     # Run the enabled test cases.
     tc_list = [(tc1, False), (tc2, False), (tc3, False), (tc4, False),
-               (tc5, False), (tc6, False), (tc7, False), (tc8, True),
-               (tc9, True)]
+               (tc5, False), (tc6, False), (tc7, False), (tc8, False),
+               (tc9, False), (tc10, True)]
     for (test_case, action) in tc_list:
         if action:
             test_case(ser)
