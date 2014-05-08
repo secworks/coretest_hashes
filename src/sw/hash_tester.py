@@ -446,7 +446,6 @@ def single_block_test_sha512x(block, mode, ser):
                         '\x00', '\x00', '\x00', mode_cmd, EOC], ser)
     time.sleep(PROC_DELAY_TIME)
     write_serial_bytes([SOC, READ_CMD, SHA512_ADDR_PREFIX, SHA512_ADDR_STATUS, EOC], ser)
-    time.sleep(PROC_DELAY_TIME)
 
     # Select the correct number of digest addresses to read.
     if (mode == MODE_SHA_512_224):
@@ -484,7 +483,6 @@ def dual_block_test_sha512x(block0, block1, mode, ser):
                         '\x00', '\x00', '\x00', mode_cmd, EOC], ser)
     time.sleep(PROC_DELAY_TIME)
     write_serial_bytes([SOC, READ_CMD, SHA512_ADDR_PREFIX, SHA512_ADDR_STATUS, EOC], ser)
-    time.sleep(PROC_DELAY_TIME)
 
     # Write block1 to SHA-512.
     for i in range(len(block1) / 4):
@@ -498,7 +496,6 @@ def dual_block_test_sha512x(block0, block1, mode, ser):
                         '\x00', '\x00', '\x00', mode_cmd, EOC], ser)
     time.sleep(PROC_DELAY_TIME)
     write_serial_bytes([SOC, READ_CMD, SHA512_ADDR_PREFIX, SHA512_ADDR_STATUS, EOC], ser)
-    time.sleep(PROC_DELAY_TIME)
 
     # Select the correct number of digest addresses to read.
     if (mode == MODE_SHA_512_224):
