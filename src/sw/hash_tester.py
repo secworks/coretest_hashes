@@ -73,7 +73,7 @@ STOP_BITS = 1
 VERBOSE = False
 
 # Delay times we wait
-PROC_DELAY_TIME = 0.05
+PROC_DELAY_TIME = 0.0001
 COMM_DELAY_TIME = 0.05
 
 # Memory map.
@@ -898,9 +898,9 @@ def tc10(ser):
     tc10_256_expected = [0x3928e184, 0xfb8690f8, 0x40da3988, 0x121d31be,
                          0x65cb9d3e, 0xf83ee614, 0x6feac861, 0xe19b563a]
 
-    tc10_384_expected = [0xcb00753f, 0x45a35e8b, 0xb5a03d69, 0x9ac65007,
-                         0x272c32ab, 0x0eded163, 0x1a8b605a, 0x43ff5bed,
-                         0x8086072b, 0xa1e7cc23, 0x58baeca1, 0x34c825a7]
+    tc10_384_expected = [0x09330c33, 0xf71147e8, 0x3d192fc7, 0x82cd1b47,
+                         0x53111b17, 0x3b3b05d2, 0x2fa08086, 0xe3b0f712,
+                         0xfcc7c71a, 0x557e2db9, 0x66c3e9fa, 0x91746039]
 
     tc10_512_expected = [0x8e959b75, 0xdae313da, 0x8cf4f728, 0x14fc143f,
                          0x8f7779c6, 0xeb9f7fa1, 0x7299aead, 0xb6889018,
