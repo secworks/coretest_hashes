@@ -269,6 +269,33 @@ sha512_digest_addr = [SHA512_ADDR_DIGEST0,  SHA512_ADDR_DIGEST1,
                       SHA512_ADDR_DIGEST12, SHA512_ADDR_DIGEST13,
                       SHA512_ADDR_DIGEST14, SHA512_ADDR_DIGEST15]
 
+NIST_512_SINGLE = ['\x61', '\x62', '\x63', '\x80', '\x00', '\x00', '\x00', '\x00',
+                   '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00',
+                   '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00',
+                   '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00',
+                   '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00',
+                   '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00',
+                   '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00',
+                   '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x18']
+
+NIST_512_DOUBLE0 = ['\x61', '\x62', '\x63', '\x64', '\x62', '\x63', '\x64', '\x65',
+                   '\x63', '\x64', '\x65', '\x66', '\x64', '\x65', '\x66', '\x67',
+                   '\x65', '\x66', '\x67', '\x68', '\x66', '\x67', '\x68', '\x69',
+                   '\x67', '\x68', '\x69', '\x6A', '\x68', '\x69', '\x6A', '\x6B',
+                   '\x69', '\x6A', '\x6B', '\x6C', '\x6A', '\x6B', '\x6C', '\x6D',
+                   '\x6B', '\x6C', '\x6D', '\x6E', '\x6C', '\x6D', '\x6E', '\x6F',
+                   '\x6D', '\x6E', '\x6F', '\x70', '\x6E', '\x6F', '\x70', '\x71',
+                   '\x80', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00']
+
+NIST_512_DOUBLE1 = ['\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00',
+                   '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00',
+                   '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00',
+                   '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00',
+                   '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00',
+                   '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00',
+                   '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00',
+                   '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x01', '\xC0']
+
 
 #-------------------------------------------------------------------
 # print_response()
@@ -560,18 +587,10 @@ def tc1(ser):
 
 
 #-------------------------------------------------------------------
-# TC2: Single block message test as specified by NIST.
+# TC2: SHA-1 Single block message test as specified by NIST.
 #-------------------------------------------------------------------
 def tc2(ser):
     print "TC2: Single block message test for SHA-1."
-    tc2_block = ['\x61', '\x62', '\x63', '\x80', '\x00', '\x00', '\x00', '\x00',
-                 '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00',
-                 '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00',
-                 '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00',
-                 '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00',
-                 '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00',
-                 '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00',
-                 '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x18']
 
     tc2_sha1_expected = [0xa9993e36, 0x4706816a, 0xba3e2571,
                          0x7850c26c, 0x9cd0d89d]
@@ -580,31 +599,14 @@ def tc2(ser):
     for i in tc2_sha1_expected:
         print("0x%08x " % i)
     print("")
-    single_block_test_sha1(tc2_block, ser)
+    single_block_test_sha1(NIST_512_SINGLE, ser)
     
 
 #-------------------------------------------------------------------
-# TC3: Double block message test as specified by NIST.
+# TC3: SHA-1 Double block message test as specified by NIST.
 #-------------------------------------------------------------------
 def tc3(ser):
     print "TC3: Double block message test for SHA-1."
-    tc3_1_block = ['\x61', '\x62', '\x63', '\x64', '\x62', '\x63', '\x64', '\x65',
-                   '\x63', '\x64', '\x65', '\x66', '\x64', '\x65', '\x66', '\x67',
-                   '\x65', '\x66', '\x67', '\x68', '\x66', '\x67', '\x68', '\x69',
-                   '\x67', '\x68', '\x69', '\x6A', '\x68', '\x69', '\x6A', '\x6B',
-                   '\x69', '\x6A', '\x6B', '\x6C', '\x6A', '\x6B', '\x6C', '\x6D',
-                   '\x6B', '\x6C', '\x6D', '\x6E', '\x6C', '\x6D', '\x6E', '\x6F',
-                   '\x6D', '\x6E', '\x6F', '\x70', '\x6E', '\x6F', '\x70', '\x71',
-                   '\x80', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00']
-
-    tc3_2_block = ['\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00',
-                   '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00',
-                   '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00',
-                   '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00',
-                   '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00',
-                   '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00',
-                   '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00',
-                   '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x01', '\xC0']
 
     tc3_1_sha1_expected = [0xF4286818, 0xC37B27AE, 0x0408F581,
                            0x84677148, 0x4A566572]
@@ -620,7 +622,7 @@ def tc3(ser):
     for i in tc3_2_sha1_expected:
         print("0x%08x " % i)
     print("")
-    double_block_test_sha1(tc3_1_block, tc3_2_block, ser)
+    double_block_test_sha1(NIST_512_DOUBLE0, NIST_512_DOUBLE1, ser)
 
 
 #-------------------------------------------------------------------
@@ -638,7 +640,7 @@ def tc4(ser):
 
 
 #-------------------------------------------------------------------
-# TC5: Single block message test as specified by NIST.
+# TC5: SHA-256 Single block message test as specified by NIST.
 #-------------------------------------------------------------------
 def tc5(ser):
     print "TC5: Single block message test for SHA-256."
@@ -650,11 +652,11 @@ def tc5(ser):
     for i in tc5_sha256_expected:
         print("0x%08x " % i)
     print("")
-    single_block_test_sha256(tc2_block, ser)
+    single_block_test_sha256(NIST_512_SINGLE, ser)
 
 
 #-------------------------------------------------------------------
-# TC6: Double block message test as specified by NIST.
+# TC6: SHA-256 Double block message test as specified by NIST.
 #-------------------------------------------------------------------
 def tc6(ser):
     print "TC6: Double block message test for SHA-256."
@@ -673,7 +675,7 @@ def tc6(ser):
     for i in tc6_2_sha256_expected:
         print("0x%08x " % i)
     print("")
-    double_block_test_sha256(tc3_1_block, tc3_2_block, ser)
+    double_block_test_sha256(NIST_512_DOUBLE0, NIST_512_DOUBLE1, ser)
 
 
 #-------------------------------------------------------------------
