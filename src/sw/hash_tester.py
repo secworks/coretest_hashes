@@ -560,47 +560,9 @@ def tc1(ser):
 
 
 #-------------------------------------------------------------------
-# main()
-#
-# Parse any arguments and run the tests.
+# TC2: Single block message test as specified by NIST.
 #-------------------------------------------------------------------
-def main():
-    # Open device
-    ser = serial.Serial()
-    ser.port=SERIAL_DEVICE
-    ser.baudrate=BAUD_RATE
-    ser.bytesize=DATA_BITS
-    ser.parity='N'
-    ser.stopbits=STOP_BITS
-    ser.timeout=1
-    ser.writeTimeout=0
-
-    if VERBOSE:
-        print "Setting up a serial port and starting a receive thread."
-
-    try:
-        ser.open()
-    except:
-        print "Error: Can't open serial device."
-        sys.exit(1)
-
-    try:
-        my_thread = threading.Thread(target=read_serial_thread, args=(ser,))
-    except:
-        print "Error: Can't start thread."
-        sys.exit()
-        
-    my_thread.daemon = True
-    my_thread.start()
-
-    # Do the enabled test cases.
-    tc_list = [(tc1, True)]
-    for (test_case, action) in tc_list:
-        if action:
-            test_case(ser)
-
-
-    # TC2: Single block message test as specified by NIST.
+def tc2(ser):
     print "TC2: Single block message test for SHA-1."
     tc2_block = ['\x61', '\x62', '\x63', '\x80', '\x00', '\x00', '\x00', '\x00',
                  '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00',
@@ -619,9 +581,12 @@ def main():
         print("0x%08x " % i)
     print("")
     single_block_test_sha1(tc2_block, ser)
+    
 
-
-    # TC3: Double block message test as specified by NIST.
+#-------------------------------------------------------------------
+# TC3: Double block message test as specified by NIST.
+#-------------------------------------------------------------------
+def tc3(ser):
     print "TC3: Double block message test for SHA-1."
     tc3_1_block = ['\x61', '\x62', '\x63', '\x64', '\x62', '\x63', '\x64', '\x65',
                    '\x63', '\x64', '\x65', '\x66', '\x64', '\x65', '\x66', '\x67',
@@ -658,7 +623,10 @@ def main():
     double_block_test_sha1(tc3_1_block, tc3_2_block, ser)
 
 
-    # TC4: Read name and version from SHA-256 core.
+#-------------------------------------------------------------------
+# TC4: Read name and version from SHA-256 core.
+#-------------------------------------------------------------------
+def tc4(ser):
     print "TC4: Reading name, type and version words from SHA-256 core."
     my_cmd = [SOC, READ_CMD, SHA256_ADDR_PREFIX, SHA256_ADDR_NAME0, EOC]
     write_serial_bytes(my_cmd, ser)
@@ -669,7 +637,10 @@ def main():
     print""
 
 
-    # TC5: Single block message test as specified by NIST.
+#-------------------------------------------------------------------
+# TC5: Single block message test as specified by NIST.
+#-------------------------------------------------------------------
+def tc5(ser):
     print "TC5: Single block message test for SHA-256."
 
     tc5_sha256_expected = [0xBA7816BF, 0x8F01CFEA, 0x414140DE, 0x5DAE2223,
@@ -682,7 +653,10 @@ def main():
     single_block_test_sha256(tc2_block, ser)
 
 
-    # TC6: Double block message test as specified by NIST.
+#-------------------------------------------------------------------
+# TC6: Double block message test as specified by NIST.
+#-------------------------------------------------------------------
+def tc6(ser):
     print "TC6: Double block message test for SHA-256."
 
     tc6_1_sha256_expected = [0x85E655D6, 0x417A1795, 0x3363376A, 0x624CDE5C,
@@ -702,7 +676,10 @@ def main():
     double_block_test_sha256(tc3_1_block, tc3_2_block, ser)
 
 
-    # TC7: SHA-256 Huge message test.
+#-------------------------------------------------------------------
+# TC7: SHA-256 Huge message test.
+#-------------------------------------------------------------------
+def tc7(ser):
     n = 10
     print "TC7: Message with %d blocks test for SHA-256." % n
     tc7_block = ['\xaa', '\x55', '\xaa', '\x55', '\xde', '\xad', '\xbe', '\xef',
@@ -724,7 +701,10 @@ def main():
     huge_message_test_sha256(tc7_block, n, ser)
 
 
-    # TC8: Read name and version from SHA-512 core.
+#-------------------------------------------------------------------
+# TC8: Read name and version from SHA-512 core.
+#-------------------------------------------------------------------
+def tc8(ser):
     print "TC8: Reading name, type and version words from SHA-512 core."
     my_cmd = [SOC, READ_CMD, SHA512_ADDR_PREFIX, SHA512_ADDR_NAME0, EOC]
     write_serial_bytes(my_cmd, ser)
@@ -735,7 +715,10 @@ def main():
     print""
 
 
-    # TC9: Single block test of SHA-512
+#-------------------------------------------------------------------
+# TC9: Single block test of SHA-512
+#-------------------------------------------------------------------
+def tc9(ser):
     print "TC9: Single block message test for SHA-512/x."
     tc8_block = ['\x61', '\x62', '\x63', '\x80', '\x00', '\x00', '\x00', '\x00',
                  '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00',
@@ -768,6 +751,49 @@ def main():
     tc8_384_expected = [0xcb00753f, 0x45a35e8b, 0xb5a03d69, 0x9ac65007,
                         0x272c32ab, 0x0eded163, 0x1a8b605a, 0x43ff5bed,
                         0x8086072b, 0xa1e7cc23, 0x58baeca1, 0x34c825a7]
+        
+
+#-------------------------------------------------------------------
+# main()
+#
+# Parse any arguments and run the tests.
+#-------------------------------------------------------------------
+def main():
+    # Open device
+    ser = serial.Serial()
+    ser.port=SERIAL_DEVICE
+    ser.baudrate=BAUD_RATE
+    ser.bytesize=DATA_BITS
+    ser.parity='N'
+    ser.stopbits=STOP_BITS
+    ser.timeout=1
+    ser.writeTimeout=0
+
+    if VERBOSE:
+        print "Setting up a serial port and starting a receive thread."
+
+    try:
+        ser.open()
+    except:
+        print "Error: Can't open serial device."
+        sys.exit(1)
+
+    try:
+        my_thread = threading.Thread(target=read_serial_thread, args=(ser,))
+    except:
+        print "Error: Can't start thread."
+        sys.exit()
+        
+    my_thread.daemon = True
+    my_thread.start()
+
+    # Run the enabled test cases.
+    tc_list = [(tc1, True), (tc2, True), (tc3, True), (tc4, True),
+               (tc5, True), (tc6, True), (tc7, True), (tc8, True),
+               (tc9, True)]
+    for (test_case, action) in tc_list:
+        if action:
+            test_case(ser)
 
     # Exit nicely.
     if VERBOSE:
