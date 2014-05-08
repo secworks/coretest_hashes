@@ -406,9 +406,9 @@ def single_block_test_sha512x(block, mode, ser):
         write_serial_bytes(message, ser)
 
     # Start initial block hashing, wait and check status.
-    # TODO: Combine mode to get correct mode performed.
+    mode_cmd = chr(ord(SHA512_CTRL_INIT_CMD) + (ord(mode) << SHA512_CTRL_MODE_LOW))
     write_serial_bytes([SOC, WRITE_CMD, SHA512_ADDR_PREFIX, SHA512_ADDR_CTRL,
-                        '\x00', '\x00', '\x00', SHA512_CTRL_INIT_CMD, EOC], ser)
+                        '\x00', '\x00', '\x00', mode_cmd, EOC], ser)
     time.sleep(DELAY_TIME)
     write_serial_bytes([SOC, READ_CMD, SHA512_ADDR_PREFIX, SHA512_ADDR_STATUS, EOC], ser)
     time.sleep(DELAY_TIME)
