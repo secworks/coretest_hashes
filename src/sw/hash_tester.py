@@ -72,6 +72,8 @@ STOP_BITS = 1
 # Verbose operation on/off
 VERBOSE = False
 
+# Delay time we wait
+DELAY_TIME = 0.05
 
 # Memory map.
 SOC                   = '\x55'
@@ -327,7 +329,7 @@ def read_serial_thread(serialport):
                 buffer = []
         else:
             print "No open device yet."
-            time.sleep(0.1)
+            time.sleep(DELAY_TIME)
             
 
 #-------------------------------------------------------------------
@@ -343,7 +345,7 @@ def write_serial_bytes(tx_cmd, serialport):
         serialport.write(tx_byte)
 
     # Allow the device to complete the transaction.
-    time.sleep(0.1)
+    time.sleep(DELAY_TIME)
 
 
 #-------------------------------------------------------------------
@@ -376,7 +378,7 @@ def single_block_test_sha256(block, ser):
     # Start initial block hashing, wait and check status.
     write_serial_bytes([SOC, WRITE_CMD, SHA256_ADDR_PREFIX, SHA256_ADDR_CTRL,
                         '\x00', '\x00', '\x00', SHA256_CTRL_INIT_CMD, EOC], ser)
-    time.sleep(0.1)
+    time.sleep(DELAY_TIME)
     write_serial_bytes([SOC, READ_CMD, SHA256_ADDR_PREFIX, SHA256_ADDR_STATUS, EOC], ser)
 
     # Extract the digest.
@@ -401,7 +403,7 @@ def double_block_test_sha256(block1, block2, ser):
     # Start initial block hashing, wait and check status.
     write_serial_bytes([SOC, WRITE_CMD, SHA256_ADDR_PREFIX, SHA256_ADDR_CTRL,
                         '\x00', '\x00', '\x00', SHA256_CTRL_INIT_CMD, EOC], ser)
-    time.sleep(0.1)
+    time.sleep(DELAY_TIME)
     write_serial_bytes([SOC, READ_CMD, SHA256_ADDR_PREFIX, SHA256_ADDR_STATUS, EOC], ser)
 
     # Extract the first digest.
@@ -419,7 +421,7 @@ def double_block_test_sha256(block1, block2, ser):
     # Start next block hashing, wait and check status.
     write_serial_bytes([SOC, WRITE_CMD, SHA256_ADDR_PREFIX, SHA256_ADDR_CTRL,
                         '\x00', '\x00', '\x00', SHA256_CTRL_NEXT_CMD, EOC], ser)
-    time.sleep(0.1)
+    time.sleep(DELAY_TIME)
     write_serial_bytes([SOC, READ_CMD, SHA256_ADDR_PREFIX, SHA256_ADDR_STATUS, EOC], ser)
 
     # Extract the second digest.
@@ -444,24 +446,31 @@ def huge_message_test_sha256(block, n, ser):
     # Start initial block hashing, wait.
     write_serial_bytes([SOC, WRITE_CMD, SHA256_ADDR_PREFIX, SHA256_ADDR_CTRL,
                         '\x00', '\x00', '\x00', SHA256_CTRL_INIT_CMD, EOC], ser)
-    time.sleep(0.1)
+    time.sleep(DELAY_TIME)
     print "Block 0 done."
 
     # First block done.
     n = n - 1
 
+    # Extract the digest for the current block.
+    for digest_addr in sha256_digest_addr:
+        message = [SOC, READ_CMD, SHA256_ADDR_PREFIX] + [digest_addr] + [EOC]
+        write_serial_bytes(message, ser)
+        print""
+
     for i in range(n):
         # Start next block hashing, wait.
         write_serial_bytes([SOC, WRITE_CMD, SHA256_ADDR_PREFIX, SHA256_ADDR_CTRL,
                             '\x00', '\x00', '\x00', SHA256_CTRL_NEXT_CMD, EOC], ser)
-        time.sleep(0.1)
         print "Block %d done." % (i + 1)
+        time.sleep(DELAY_TIME)
 
         # Extract the digest for the current block.
         for digest_addr in sha256_digest_addr:
             message = [SOC, READ_CMD, SHA256_ADDR_PREFIX] + [digest_addr] + [EOC]
             write_serial_bytes(message, ser)
             print""
+        time.sleep(DELAY_TIME)
 
 
 #-------------------------------------------------------------------
@@ -480,7 +489,7 @@ def single_block_test_sha1(block, ser):
     # Start initial block hashing, wait and check status.
     write_serial_bytes([SOC, WRITE_CMD, SHA1_ADDR_PREFIX, SHA1_ADDR_CTRL,
                         '\x00', '\x00', '\x00', SHA1_CTRL_INIT_CMD, EOC], ser)
-    time.sleep(0.1)
+    time.sleep(DELAY_TIME)
     write_serial_bytes([SOC, READ_CMD, SHA1_ADDR_PREFIX, SHA1_ADDR_STATUS,   EOC], ser)
 
     # Extract the digest.
@@ -505,7 +514,7 @@ def double_block_test_sha1(block1, block2, ser):
     # Start initial block hashing, wait and check status.
     write_serial_bytes([SOC, WRITE_CMD, SHA1_ADDR_PREFIX, SHA1_ADDR_CTRL,
                         '\x00', '\x00', '\x00', SHA1_CTRL_INIT_CMD, EOC], ser)
-    time.sleep(0.1)
+    time.sleep(DELAY_TIME)
     write_serial_bytes([SOC, READ_CMD, SHA1_ADDR_PREFIX, SHA1_ADDR_STATUS,   EOC], ser)
 
     # Extract the first digest.
@@ -523,7 +532,7 @@ def double_block_test_sha1(block1, block2, ser):
     # Start next block hashing, wait and check status.
     write_serial_bytes([SOC, WRITE_CMD, SHA1_ADDR_PREFIX, SHA1_ADDR_CTRL,
                         '\x00', '\x00', '\x00', SHA1_CTRL_NEXT_CMD, EOC], ser)
-    time.sleep(0.1)
+    time.sleep(DELAY_TIME)
     write_serial_bytes([SOC, READ_CMD, SHA1_ADDR_PREFIX, SHA1_ADDR_STATUS,   EOC], ser)
 
     # Extract the second digest.
