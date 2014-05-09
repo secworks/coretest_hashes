@@ -65,6 +65,11 @@ import hashlib
 # CONFIGURE YOUR DEVICE HERE!
 SERIAL_DEVICE = '/dev/cu.usbserial-A801SA6T'
 BAUD_RATE = 9600
+BIT_RATE  = int(50E6 / BAUD_RATE)
+
+BAUD_RATE2 = 256000
+BIT_RATE2  = int(50E6 / BAUD_RATE2)
+
 DATA_BITS = 8
 STOP_BITS = 1
 
@@ -74,7 +79,7 @@ VERBOSE = False
 
 # Delay times we wait
 PROC_DELAY_TIME = 0.0001
-COMM_DELAY_TIME = 0.03
+COMM_DELAY_TIME = 0.005
 
 # Memory map.
 SOC                   = '\x55'
@@ -83,6 +88,9 @@ READ_CMD              = '\x10'
 WRITE_CMD             = '\x11'
 
 UART_ADDR_PREFIX      = '\x00'
+UART_ADDR_BIT_RATE    = '\x10'
+UART_ADDR_DATA_BITS   = '\x11'
+UART_ADDR_STOP_BITS   = '\x12'
 
 SHA1_ADDR_PREFIX      = '\x10'
 SHA1_ADDR_NAME0       = '\x00'
@@ -957,6 +965,20 @@ def main():
         print "Error: Can't open serial device."
         sys.exit(1)
 
+    # Try and switch baud rate in the FPGA and then here.
+    bit_rate_high = chr((BIT_RATE2 >> 8) & 0xff)
+    bit_rate_low = chr(BIT_RATE2 & 0xff)
+
+    if VERBOSE:
+        print("Changing to new baud rate.")
+        print("Baud rate: %d" % BAUD_RATE2)
+        print("Bit rate high byte: 0x%02x" % ord(bit_rate_high))
+        print("Bit rate low byte:  0x%02x" % ord(bit_rate_low))
+
+    write_serial_bytes([SOC, WRITE_CMD, UART_ADDR_PREFIX, UART_ADDR_BIT_RATE,
+                        '\x00', '\x00', bit_rate_high, bit_rate_low, EOC], ser)
+    ser.baudrate=BAUD_RATE2
+
     try:
         my_thread = threading.Thread(target=read_serial_thread, args=(ser,))
     except:
@@ -975,6 +997,7 @@ def main():
             test_case(ser)
 
     # Exit nicely.
+    time.sleep(50 * COMM_DELAY_TIME)
     if VERBOSE:
         print "Done. Closing device."
     ser.close()
