@@ -610,6 +610,7 @@ def huge_message_test_sha256(block, n, ser):
     write_serial_bytes([SOC, READ_CMD, SHA256_ADDR_PREFIX, SHA256_ADDR_STATUS, EOC], ser)
 
     # Extract the first digest.
+    print "Digest for block 00:"
     for digest_addr in sha256_digest_addr:
         message = [SOC, READ_CMD, SHA256_ADDR_PREFIX] + [digest_addr] + [EOC]
         write_serial_bytes(message, ser)
@@ -624,6 +625,7 @@ def huge_message_test_sha256(block, n, ser):
         write_serial_bytes([SOC, READ_CMD, SHA256_ADDR_PREFIX, SHA256_ADDR_STATUS, EOC], ser)
 
         # Extract the second digest.
+        print "Digest for block %02d" % (i + 1)
         for digest_addr in sha256_digest_addr:
             message = [SOC, READ_CMD, SHA256_ADDR_PREFIX] + [digest_addr] + [EOC]
             write_serial_bytes(message, ser)
@@ -806,7 +808,7 @@ def tc6(ser):
 # TC7: SHA-256 Huge message test.
 #-------------------------------------------------------------------
 def tc7(ser):
-    n = 2
+    n = 100
     print "TC7: Message with %d blocks test for SHA-256." % n
     tc7_block = ['\xaa', '\x55', '\xaa', '\x55', '\xde', '\xad', '\xbe', '\xef',
                  '\x55', '\xaa', '\x55', '\xaa', '\xf0', '\x0f', '\xf0', '\x0f',
@@ -820,8 +822,8 @@ def tc7(ser):
                  '\xaa', '\x55', '\xaa', '\x55', '\xde', '\xad', '\xbe', '\xef',
                  '\x55', '\xaa', '\x55', '\xaa', '\xf0', '\x0f', '\xf0', '\x0f']
 
-    tc7_expected = [0xf407ff0d, 0xb9dce2f6, 0x9b9759a9, 0xd3cdc805,
-                    0xf250086d, 0x73bbefd5, 0xa972e0f7, 0x61a9c13e]
+    tc7_expected = [0x881e9d79, 0xba8b92b1, 0xbb72c103, 0x617e5580,
+                    0x31fb69ce, 0xd954e335, 0xb5e702c3, 0xc04b1379]
 
     print "TC7: Expected digest values after %d blocks:" %n
     for i in tc7_expected:
