@@ -603,34 +603,31 @@ def huge_message_test_sha256(block, n, ser):
                   block[(i * 4) : ((i * 4 ) + 4)] + [EOC]
         write_serial_bytes(message, ser)
 
-    # Start initial block hashing, wait.
+    # Start initial block hashing, wait and check status.
     write_serial_bytes([SOC, WRITE_CMD, SHA256_ADDR_PREFIX, SHA256_ADDR_CTRL,
                         '\x00', '\x00', '\x00', SHA256_CTRL_INIT_CMD, EOC], ser)
     time.sleep(PROC_DELAY_TIME)
-    print "Block 0 done."
+    write_serial_bytes([SOC, READ_CMD, SHA256_ADDR_PREFIX, SHA256_ADDR_STATUS, EOC], ser)
 
-    # First block done.
-    n = n - 1
-
-    # Extract the digest for the current block.
+    # Extract the first digest.
     for digest_addr in sha256_digest_addr:
         message = [SOC, READ_CMD, SHA256_ADDR_PREFIX] + [digest_addr] + [EOC]
         write_serial_bytes(message, ser)
-        print""
+    print""
 
-    for i in range(n):
-        # Start next block hashing, wait.
+    # First block done. Do the rest.
+    for i in range(n - 1):
+        # Start next block hashing, wait and check status.
         write_serial_bytes([SOC, WRITE_CMD, SHA256_ADDR_PREFIX, SHA256_ADDR_CTRL,
                             '\x00', '\x00', '\x00', SHA256_CTRL_NEXT_CMD, EOC], ser)
-        print "Block %d done." % (i + 1)
         time.sleep(PROC_DELAY_TIME)
+        write_serial_bytes([SOC, READ_CMD, SHA256_ADDR_PREFIX, SHA256_ADDR_STATUS, EOC], ser)
 
-        # Extract the digest for the current block.
+        # Extract the second digest.
         for digest_addr in sha256_digest_addr:
             message = [SOC, READ_CMD, SHA256_ADDR_PREFIX] + [digest_addr] + [EOC]
             write_serial_bytes(message, ser)
-            print""
-        time.sleep(PROC_DELAY_TIME)
+        print""
 
 
 #-------------------------------------------------------------------
@@ -809,14 +806,17 @@ def tc6(ser):
 # TC7: SHA-256 Huge message test.
 #-------------------------------------------------------------------
 def tc7(ser):
-    n = 10
+    n = 2
     print "TC7: Message with %d blocks test for SHA-256." % n
     tc7_block = ['\xaa', '\x55', '\xaa', '\x55', '\xde', '\xad', '\xbe', '\xef',
                  '\x55', '\xaa', '\x55', '\xaa', '\xf0', '\x0f', '\xf0', '\x0f',
+
                  '\xaa', '\x55', '\xaa', '\x55', '\xde', '\xad', '\xbe', '\xef',
                  '\x55', '\xaa', '\x55', '\xaa', '\xf0', '\x0f', '\xf0', '\x0f',
+
                  '\xaa', '\x55', '\xaa', '\x55', '\xde', '\xad', '\xbe', '\xef',
                  '\x55', '\xaa', '\x55', '\xaa', '\xf0', '\x0f', '\xf0', '\x0f',
+
                  '\xaa', '\x55', '\xaa', '\x55', '\xde', '\xad', '\xbe', '\xef',
                  '\x55', '\xaa', '\x55', '\xaa', '\xf0', '\x0f', '\xf0', '\x0f']
 
@@ -827,6 +827,7 @@ def tc7(ser):
     for i in tc7_expected:
         print("0x%08x " % i)
     print("")
+
     huge_message_test_sha256(tc7_block, n, ser)
 
 
