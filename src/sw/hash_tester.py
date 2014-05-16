@@ -79,7 +79,7 @@ VERBOSE = False
 
 # Delay times we wait
 PROC_DELAY_TIME = 0.0001
-COMM_DELAY_TIME = 0.005
+COMM_DELAY_TIME = 0.05
 
 # Memory map.
 SOC                   = '\x55'
@@ -990,8 +990,8 @@ def main():
 
     # Run the enabled test cases.
     tc_list = [(tc1, False), (tc2, False), (tc3, False), (tc4, False),
-               (tc5, False), (tc6, False), (tc7, False), (tc8, False),
-               (tc9, False), (tc10, True)]
+               (tc5, False), (tc6, False), (tc7, True), (tc8, False),
+               (tc9, False), (tc10, False)]
     for (test_case, action) in tc_list:
         if action:
             test_case(ser)
