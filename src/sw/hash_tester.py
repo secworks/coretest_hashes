@@ -81,12 +81,13 @@ VERBOSE = False
 PROC_DELAY_TIME = 0.0001
 COMM_DELAY_TIME = 0.01
 
-# Memory map.
+# Command codes.
 SOC                   = '\x55'
 EOC                   = '\xaa'
 READ_CMD              = '\x10'
 WRITE_CMD             = '\x11'
 
+# Memory map.
 UART_ADDR_PREFIX      = '\x00'
 UART_ADDR_BIT_RATE    = '\x10'
 UART_ADDR_DATA_BITS   = '\x11'
